@@ -1,4 +1,4 @@
-package com.cmall.android;
+package com.cmall.testcase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,16 +9,17 @@ import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.InstallException;
+import com.cmall.android.DDMlib;
 
 /**
- * ADB 相关脚本
+ * ADB 相关脚本，批量安装应用
  * 
  * @author cm
  *
  */
-public class TestADB {
+public class TestInstall {
 
-	private Logger log = Logger.getLogger(TestADB.class);
+	private Logger log = Logger.getLogger(TestInstall.class);
 
 	@Test(description = "批量安装Android应用")
 	public void testInstall() {

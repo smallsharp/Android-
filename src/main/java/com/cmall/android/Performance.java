@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,12 @@ public class Performance {
 	 */
 	public static double getPssMemory(String packageName) {
 		String meminfo = getResponse(PSS, packageName);
-		String str = meminfo.substring(meminfo.indexOf("TOTAL", 0), meminfo.indexOf("Objects", 0));
+		String str = null;
+		try {
+			str = meminfo.substring(meminfo.indexOf("TOTAL", 0), meminfo.indexOf("Objects", 0));
+		} catch (Exception e) {
+			throw new RuntimeException("返回数据异常："+ str);
+		}
 		String arr[] = str.split(" ");
 		List<String> list = new ArrayList<String>();
 		for (String s : arr) {
@@ -48,7 +54,12 @@ public class Performance {
 	public static double getTotalMemory() {
 		String meminfo = getResponse(TOTAL_MEM);
 		// MemTotal: 3867416 kB
-		String total = meminfo.substring(meminfo.indexOf("MemTotal:"), meminfo.indexOf("kB"));
+		String total = null;
+		try {
+			total = meminfo.substring(meminfo.indexOf("MemTotal:"), meminfo.indexOf("kB"));
+		} catch (Exception e) {
+			throw new RuntimeException("返回数据异常："+ total);
+		}
 		return Double.valueOf(total.split(":")[1].trim()) / 1024;
 	}
 
@@ -61,7 +72,12 @@ public class Performance {
 	public static double getHeapMemory(String packageName) {
 		String meminfo = getResponse(PSS, packageName);
 		// Dalvik Heap 16530 32816 0 0 32324 30305 2019
-		String str = meminfo.substring(meminfo.indexOf("Dalvik Heap"), meminfo.indexOf("Dalvik Other"));
+		String str = null;
+		try {
+			str = meminfo.substring(meminfo.indexOf("Dalvik Heap"), meminfo.indexOf("Dalvik Other"));
+		} catch (Exception e) {
+			throw new RuntimeException("返回数据异常："+ str);
+		}
 		String arr[] = str.split(" ");
 		List<String> list = new ArrayList<String>();
 		for (String s : arr) {
@@ -106,6 +122,7 @@ public class Performance {
 	 * @return
 	 */
 	public static double[] getTotalWifiArr(String uid) {
+		
 		double received = 0;
 		double total = 0;
 		double send = 0;
@@ -144,8 +161,8 @@ public class Performance {
 			while ((line = in.readLine()) != null) {
 				sb.append(line + "\n");
 			}
-			// 判断应用进程是否已经启动
-			if (sb.toString().startsWith("No process found")) {
+			// 判断应用进程是否已经启动，或中途断开
+			if (sb.toString().startsWith("No process found") ||sb.toString().equals("")) {
 				throw new RuntimeException("没有检测到进程，请打开应用！！");
 			}
 		} catch (IOException e) {
@@ -167,7 +184,7 @@ public class Performance {
 		try {
 			pro = runtime.exec(cmd);
 			if (pro.waitFor() != 0) {
-				System.err.println("waitFor value = " + pro.exitValue());
+				throw new RuntimeException("没有检测到设备连接,请检查！");
 			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(pro.getInputStream()));
 			sb = new StringBuffer();

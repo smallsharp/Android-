@@ -1,10 +1,11 @@
-package com.cmall.android;
+package com.cmall.fortest;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import org.apache.log4j.Logger;
 import com.android.ddmlib.IDevice;
+import com.cmall.android.DDMlib;
+import com.cmall.android.Performance;
+
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
@@ -14,19 +15,14 @@ public class Testcase2 {
 	
 	private static Logger log = Logger.getLogger(Testcase2.class);
 	
-	
-	
 	public static void main(String[] args) {
-		
 		File file = new File("c:/abc.xls");
 		writeToExcel(file, "第一个", 10, 1);
-
 	}
 
 	public static void writeToExcel(File file, String sheetName, int times, long intervals)  {
 		DDMlib ddmlib = null;
 		try {
-			
 			WritableWorkbook writeBook = Workbook.createWorkbook(file);
 			WritableSheet writableSheet = writeBook.createSheet(sheetName, 1);
 
@@ -73,12 +69,10 @@ public class Testcase2 {
 //				}
 //				Thread.sleep(intervals);
 //			}
-			
 			writeBook.write();
 			writeBook.close();
 			file.delete();
 			ddmlib.finish();
-
 		} catch (Exception e) {
 			System.out.println("异常了！！！");
 		}

@@ -1,4 +1,4 @@
-package com.cmall.android;
+package com.cmall.fortest;
 
 import java.text.DecimalFormat;
 
