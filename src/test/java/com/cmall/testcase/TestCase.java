@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
-
 import com.cmall.android.Performance;
 
 public class TestCase {
@@ -20,9 +19,7 @@ public class TestCase {
 	private static final String KEY_SENDED = "sended"; // wifi
 	private static final String KEY_TOTAL_FLOW = "total"; // wifi数据
 	private static final String PKG_NATIVE_SDK = "com.taidu.andorid.example3d"; // 测试应用的packageName
-	private static final String PKG_PLAY = "com.play.android";
 	private static final String PKG_TUDE = "com.tude.android";
-	private static final String PKG_RN = "com.usereactnative";
 	private double lastR = 0; // 上次获取的WIFI数据
 	private double lastS = 0;
 	private double lastT = 0;
@@ -88,28 +85,29 @@ public class TestCase {
 		}
 		pw.close();
 	}
+
+	
 	
 	@Test(description="Android专项测试")
 	public void testPrint() throws Exception {
-		print(PKG_RN);
+		print(PKG_TUDE);
 	}
 	
 	public void print(String packageName) throws Exception {
 		DecimalFormat df = new DecimalFormat("0.00");
 		double totalMemrory = Performance.getTotalMemory();
-		log.info("Total:" + totalMemrory);
+		log.info("TotalMemrory:" + totalMemrory);
 		log.info("pss(M) | heap(M) | cpu(%) | flow(KB)");
 		String uid = Performance.getUid(packageName);
-		lastT = Performance.getTotalWifiArr(uid)[2];
+		lastT = Performance.getTotalWifiArr(uid)[2]; // 上次获取的总流量
 		for (int i=0; i<200; i++) {
 			double pss = Performance.getPssMemory(packageName);
 			double heap = Performance.getHeapMemory(packageName);
 			double cpu = Performance.getCpuInfo(packageName);
 			double flow[] = Performance.getTotalWifiArr(uid);
 			double nowFlow = flow[2]-lastT;
-			log.info("[P]:"+df.format(pss) + ", [H]:" + df.format(heap) + ", [C]:" + df.format(cpu) + ", [F]:" + df.format(nowFlow));
+			log.info("第"+i+"次, [P]:"+df.format(pss) + ", [H]:" + df.format(heap) + ", [C]:" + df.format(cpu) + ", [F]:" + df.format(nowFlow));
 			lastT = flow[2];
 		}
 	}
-
 }
